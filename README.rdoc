@@ -1,3 +1,6 @@
 == Welcome to claimbroker
 
+claimbroker use some gems.
+1. nokogiri
+2. rest-client
 
