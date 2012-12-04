@@ -7,6 +7,7 @@ require "rest_client"
 require "socket"
 require "timeout"
 require "./claimpatient.rb"
+require "./claiminsurance.rb"
 require "./claim.rb"
 
 ACK = 0x06.chr
@@ -37,16 +38,26 @@ loop do
 
     claimpatient = Claimpatient.new()
     @patient_module = claimpatient.get_patient_module(@claim_doc)
-    @exist_ptId = claimpatient.check_exist(TRITON_HOST, @patient_module)
 
+    claiminsurance = Claiminsurance.new()
+    @insurance_module = claiminsurance.get_insurance_module(@claim_doc)
+    puts @insurance_module
+
+
+
+
+    # Request to TRITON
+    @exist_ptId = claimpatient.check_exist(TRITON_HOST, @patient_module)
     if @exist_ptId == ""
       puts "create new patient"
       RestClient.post(TRITON_HOST + "/patients.xml", :patient => @patient_module)
     else
-      puts "update patient id : " + exist_ptId
+      puts "update patient id : " + @exist_ptId
       RestClient.put(TRITON_HOST + "/patients/#{@exist_ptId}.xml", :patient => @patient_module,
                                                     :insurance => {:combination_number=>'06138721', 
                                                                    :provider_name=>'組合'})
     end
+
+
   end
 end

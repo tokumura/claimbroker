@@ -2,7 +2,10 @@
 # encoding: utf-8
 
 class Claim
+
   PatientModule = '//MmlBody//MmlModuleItem//content//mmlPi:PatientModule'
+  InsuranceModule = '//MmlBody//MmlModuleItem//content//mmlHi:HealthInsuranceModule'
+
   def get_personNumber(claim)
     claim.xpath(PatientModule + '//mmlPi:uniqueInfo//mmlPi:masterId//mmlCm:Id').text.strip
   end
@@ -23,6 +26,10 @@ class Claim
       personSex = "false"
     end
     personSex
+  end
+
+  def get_insuranceClass(claim)
+    claim.xpath(InsuranceModule + '//mmlHi:insuranceClass').text.strip
   end
 end
 
