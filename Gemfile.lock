@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     mime-types (1.19)
+    nokogiri (1.5.5)
     rest-client (1.6.7)
       mime-types (>= 1.16)
 
@@ -9,4 +10,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  nokogiri
   rest-client

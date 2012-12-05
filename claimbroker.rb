@@ -9,6 +9,7 @@ require "timeout"
 require "./claimpatient.rb"
 require "./claiminsurance.rb"
 require "./claim.rb"
+require "./orcaapi.rb"
 
 ACK = 0x06.chr
 TRITON_HOST = "http://127.0.0.1:3000"
@@ -39,6 +40,11 @@ loop do
     claimpatient = Claimpatient.new()
     @patient_module = claimpatient.get_patient_module(@claim_doc)
 
+    orcaapi = Orcaapi.new()
+    patient_info = orcaapi.get_patient_info(@patient_module[:number].to_s)
+    puts "#########"
+
+=begin
     claiminsurance = Claiminsurance.new()
     @insurance_module = claiminsurance.get_insurance_module(@claim_doc)
     puts @insurance_module
@@ -57,6 +63,7 @@ loop do
                                                     :insurance => {:combination_number=>'06138721', 
                                                                    :provider_name=>'組合'})
     end
+=end
 
 
   end
