@@ -41,13 +41,13 @@ loop do
     @patient_module = claimpatient.get_patient_module(@claim_doc)
 
     orcaapi = Orcaapi.new()
-    patient_info = orcaapi.get_patient_info(@patient_module[:number].to_s)
-    puts "#########"
+    @insurance_module_list = orcaapi.get_patient_info(@patient_module[:number].to_s)
 
 =begin
     claiminsurance = Claiminsurance.new()
     @insurance_module = claiminsurance.get_insurance_module(@claim_doc)
     puts @insurance_module
+=end
 
 
 
@@ -56,13 +56,13 @@ loop do
     @exist_ptId = claimpatient.check_exist(TRITON_HOST, @patient_module)
     if @exist_ptId == ""
       puts "create new patient"
-      RestClient.post(TRITON_HOST + "/patients.xml", :patient => @patient_module)
+      puts @insurance_module_list
+      RestClient.post(TRITON_HOST + "/patients.xml", :patient => @patient_module, 'insurances[]' => @insurance_module_list)
     else
       puts "update patient id : " + @exist_ptId
-      RestClient.put(TRITON_HOST + "/patients/#{@exist_ptId}.xml", :patient => @patient_module,
-                                                    :insurance => {:combination_number=>'06138721', 
-                                                                   :provider_name=>'組合'})
+      RestClient.put(TRITON_HOST + "/patients/#{@exist_ptId}.xml", :patient => @patient_module)
     end
+=begin
 =end
 
 
