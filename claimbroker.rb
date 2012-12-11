@@ -60,7 +60,7 @@ loop do
       RestClient.post(TRITON_HOST + "/patients.xml", :patient => @patient_module, 'insurances[]' => @insurance_module_list)
     else
       puts "update patient id : " + @exist_ptId
-      RestClient.put(TRITON_HOST + "/patients/#{@exist_ptId}.xml", :patient => @patient_module)
+      RestClient.put(TRITON_HOST + "/patients/#{@exist_ptId}.xml", :patient => @patient_module, 'insurances[]' => @insurance_module_list)
     end
 =begin
 =end
