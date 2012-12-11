@@ -17,6 +17,15 @@ TRITON_HOST = "http://127.0.0.1:3000"
 puts "server start!"
 socketserver = TCPServer.open(12345)
 
+if Process.respond_to? :daemon
+  # Ruby 1.9
+  Process.daemon
+else
+  # Ruby 1.8
+  require 'webrick'
+  WEBrick::Daemon.start
+end
+
 loop do
   Thread.start(socketserver.accept) do |stream|
 
