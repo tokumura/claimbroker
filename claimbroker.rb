@@ -13,10 +13,12 @@ require "./orcaapi.rb"
 
 ACK = 0x06.chr
 TRITON_HOST = "http://127.0.0.1:3000"
+STREAM_TIMEOUT = 3
 
 puts "server start!"
 socketserver = TCPServer.open(12345)
 
+=begin
 if Process.respond_to? :daemon
   # Ruby 1.9
   Process.daemon
@@ -25,6 +27,7 @@ else
   require 'webrick'
   WEBrick::Daemon.start
 end
+=end
 
 loop do
   Thread.start(socketserver.accept) do |stream|
@@ -34,7 +37,7 @@ loop do
     @exist = false
 
     begin
-      timeout(3) {
+      timeout(STREAM_TIMEOUT) {
         while stream.gets
           @claim_doc << $_
         end
@@ -52,15 +55,6 @@ loop do
     orcaapi = Orcaapi.new()
     @insurance_module_list = orcaapi.get_patient_info(@patient_module[:number].to_s)
 
-=begin
-    claiminsurance = Claiminsurance.new()
-    @insurance_module = claiminsurance.get_insurance_module(@claim_doc)
-    puts @insurance_module
-=end
-
-
-
-
     # Request to TRITON
     @exist_ptId = claimpatient.check_exist(TRITON_HOST, @patient_module)
     if @exist_ptId == ""
@@ -71,9 +65,6 @@ loop do
       puts "update patient id : " + @exist_ptId
       RestClient.put(TRITON_HOST + "/patients/#{@exist_ptId}.xml", :patient => @patient_module, 'insurances[]' => @insurance_module_list)
     end
-=begin
-=end
-
 
   end
 end

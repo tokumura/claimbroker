@@ -20,20 +20,20 @@ class Claimpatient
 
   def check_exist(triton_host, ptmod)
     xml_patients = Nokogiri::XML(RestClient.get(triton_host + "/patients.xml"))
-    xml_patients.xpath('.//patients//patient').each do |pt|
-      kana = pt.xpath('.//kana').text.strip
-      birthday = pt.xpath('.//birthday').text.strip
-      sex = pt.xpath('.//sex').text.strip
+    if xml_patients != nil
+      xml_patients.xpath('.//patients//patient').each do |pt|
 
-      puts ptmod[:kana] + "/" + ptmod[:birthday] + "/" + ptmod[:sex]
-      puts kana + "/" + birthday + "/" + sex
+        kana = pt.xpath('.//kana').text.strip
+        birthday = pt.xpath('.//birthday').text.strip
+        sex = pt.xpath('.//sex').text.strip
 
-      @exist_ptId = ""
-      if ptmod[:kana] == kana && ptmod[:birthday] == birthday && ptmod[:sex] == sex
-        @exist_ptId = pt.xpath('.//id').text.strip
+        @exist_ptId = ""
+        if ptmod[:kana] == kana && ptmod[:birthday] == birthday && ptmod[:sex] == sex
+          @exist_ptId = pt.xpath('.//id').text.strip
+        end
+        break if @exist_ptId != ""
       end
-      break if @exist_ptId != ""
+      @exist_ptId.to_s
     end
-    @exist_ptId
   end
 end
